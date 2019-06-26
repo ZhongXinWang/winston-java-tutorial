@@ -33,6 +33,5 @@ public class SpringAnnotationTest {
     public  void testSpringAnnotation(){
 
         Assert.assertNotNull(animalMethod);
-
     }
 }

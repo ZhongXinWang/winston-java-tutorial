@@ -1,12 +1,14 @@
 package com.winston.entity;
 
+import java.io.Serializable;
+
 /**
  * @author Winston.Wang
  * @version 1.0
  * @Description: 用一句话描述我是干啥的
  * @date 2019/6/12
  */
-public class Animal {
+public class Animal{
     /**
      * 动物名称
      */
