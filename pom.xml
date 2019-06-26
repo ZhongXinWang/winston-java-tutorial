@@ -157,5 +157,6 @@
         <module>spring4-parent</module>
         <module>spring4-aop</module>
         <module>mybatis</module>
+        <module>thread</module>
     </modules>
 </project>
