@@ -36,6 +36,7 @@
         <commons-cli.version>1.4</commons-cli.version>
         <mybatis.version>3.4.6</mybatis.version>
         <mysql.connector.version>5.1.8</mysql.connector.version>
+        <lombok.version>1.18.6</lombok.version>
         <!-- plugins -->
         <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -154,9 +155,15 @@
         </pluginManagement>
     </build>
     <modules>
+        <!--spring父类工程定义spring基础包的版本-->
         <module>spring4-parent</module>
+        <!--父类工程是spring4-parent-->
         <module>spring4-aop</module>
+        <!--mybatis模块-->
         <module>mybatis</module>
+        <!--多线程模块,用来学习多线程的-->
         <module>thread</module>
+        <!--lombok主要用来学习如何给DO对象添加set和get方法,简化DO类-->
+        <module>lombok</module>
     </modules>
 </project>
