@@ -165,5 +165,6 @@
         <module>thread</module>
         <!--lombok主要用来学习如何给DO对象添加set和get方法,简化DO类-->
         <module>lombok</module>
+        <module>java8</module>
     </modules>
 </project>
