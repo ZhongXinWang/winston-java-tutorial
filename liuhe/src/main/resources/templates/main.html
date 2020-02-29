@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<html xml:lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title th:text="${title}"></title>
+    <script src="/js/plugin/require.js" data-main="/js/config.js" id="current-page" current-page="main.html" current-module="main/main" defer async="true"></script>
 </head>
 <body>
-$END$
+<a href="/main/analyCount">次数分析</a>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="height:600px;width:100%;"></div>
 </body>
 </html>

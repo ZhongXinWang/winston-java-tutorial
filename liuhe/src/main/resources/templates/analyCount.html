@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title th:text="${title}"></title>
+    <script src="/js/plugin/require.js" data-main="/js/config.js" id="current-page" current-page="analyCount.html" current-module="analy/analyCount" defer async="true"></script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div style="width:400px;margin: 30px auto;">
+    <label>展示前几名:</label>
+    <input type="radio" name="limitNum" value="10" checked/>10
+    <input type="radio" name="limitNum" value="20"/>20
+    <input type="radio" name="limitNum" value="30"/>30
+    <input type="radio" name="limitNum" value="40"/>40
+
+    <button id="countAllBtn">刷新</button>
+</div>
+<div id="analyAll" style="height:400px;width:100%;"></div>
+<div style="width:600px;margin: 30px auto;">
+    <label>选择年份:</label>
+    <select id="year"></select>
+    <label>展示前几名:</label>
+    <input type="radio" name="limitYearNum" value="10" checked/>10
+    <input type="radio" name="limitYearNum" value="20"/>20
+    <input type="radio" name="limitYearNum" value="30"/>30
+    <input type="radio" name="limitYearNum" value="40"/>40
+    <button id="countYearBtn">刷新</button></div>
+<div id="analyByYear" style="height:400px;width:100%;"></div>
+</body>
+</html>

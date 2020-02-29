@@ -1,6 +1,12 @@
 package com.winston.dao;
 
-public interface UserDao {
+/**
+* dao操作接口
+* @author Winston.Wang
+* @date 2019/7/24
+* @version 1.0
+**/
+public interface CommonDao {
 
     int insert(String sql,Object... args);
 

@@ -1,13 +1,21 @@
 package com.winston.dao.test;
 
+import com.winston.app.Application;
+import com.winston.dao.CommonDao;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
+
 @RunWith(SpringRunner.class)
-@SpringBootTest
-public class TestUserDao {
+@SpringBootTest(classes = {Application.class})
+public class CommonDaoTest {
+
+    @Resource
+    private CommonDao commonDao;
 
     /**
     * 测试插入
@@ -18,6 +26,9 @@ public class TestUserDao {
     @Test
     public  void testInsert(){
 
+        String sql = "insert into test(name,age) values(?,?);";
+        int count = commonDao.insert(sql,"lisi",20);
+        Assert.assertEquals(count,1);
     }
 
     /**

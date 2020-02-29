@@ -30,7 +30,7 @@ public class MybatisXmlTest {
     @Test
     public  void testMybatisXml() throws IOException{
 
-        Reader reader = Resources.getResourceAsReader("mybatis-config");
+        Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
         SqlSession sqlSession = sqlSessionFactory.openSession(true);
         List<User> list = sqlSession.selectList("com.winston.mapper.UserMapper.selectAllUser");

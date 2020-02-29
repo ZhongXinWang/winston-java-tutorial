@@ -1,36 +1,24 @@
-# 初始Spring-boot
->开始学习spring-boot，见识spring-boot的风采。见识一下“约定优于配置”的快速启动spring开发框架
-从开始spring开始启动一个spring-web项目开始spring-boot-starter-web，揭开spring-boot的面纱
+# 修改Spring-boot的banner，快速启动web工程
+>开始学习spring-boot，见识spring-boot的风采。见识一下“约定优于配置”的快速启动spring开发框架，摆脱spring+spring MVC的一系列的xml配置
 
-#版本依赖
+#>使用maven构建spring boot
 ```
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.3.RELEASE</version>
     </parent>
-    2.1.3.RELEASE 版本的spring-boot里面依赖的spring版本是5.1.5,并没有将定义的5.1.8依赖进来
-    引入快速启动web依赖：
-     <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-            </dependency>
-     </dependencies>
 ```
+>在pom.xml文件中继承spring boot的父pom，指定一下版本2.1.3.RELEASE，父pom里面会将编译版本，spring的版本指定好。
+ 在2.1.3.RELEASE版本的spring-boot里面依赖的spring版本是5.1.5
+
 #修改spring-boot启动的banner
->自己实现Banner类
+>spring boot在启动的时候会打印出banner。这个是可以自定义的。自己实现MyBanner类实现spring boot 的Banner接口重写printBanner方法，代码如下：
+
+
+
 ```
 package com.winston.spring.banner;
-
-import org.springframework.boot.Banner;
-import org.springframework.boot.SpringBootVersion;
-import org.springframework.boot.ansi.AnsiColor;
-import org.springframework.boot.ansi.AnsiOutput;
-import org.springframework.boot.ansi.AnsiStyle;
-import org.springframework.core.env.Environment;
-
-import java.io.PrintStream;
 /**
 * x修改spring boot Banner
 * @author Winston.Wang
@@ -79,16 +67,15 @@ public class MyBanner implements Banner {
     }
 
 }
-
 ```
->修改启动类
+#启动一个spring boot
+>新建一个普通的Application.java类，这个类是一个入口类，一定要带main方法。启动这个类就能像以前一样启动一个一堆xml配置的spring工程了
 ```
 import com.winston.spring.banner.MyBanner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-
 /**
 * spring boot启动类
 * @author Winston.Wang
@@ -100,32 +87,136 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan("com.winston")
 public class Application {
     public static void main(String[] args) {
-
         SpringApplication springApplication = new SpringApplication(Application.class);
         springApplication.setBanner(new MyBanner());
         springApplication.run(args);
     }
 }
 ```
+---
+>使用spring的时候，要启动一个web工程的话，要在web.xml中做如下配置：
+```
+  <!-- 引入主配置文件 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring-config.xml</param-value>
+    </context-param>
+     <!--Spring上下文监听器-->
+        <listener>
+            <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+     </listener>
+      <!-- Spring字符编码过滤器 - 解决中文问题 -->
+      <filter>
+             <filter-name>encodingFilter</filter-name>
+             <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+             <init-param>
+                 <param-name>encoding</param-name>
+                 <param-value>UTF-8</param-value>
+             </init-param>
+             <init-param>
+                 <param-name>forceEncoding</param-name>
+                 <param-value>true</param-value>
+             </init-param>
+      </filter>
+      <filter-mapping>
+             <filter-name>encodingFilter</filter-name>
+             <url-pattern>/*</url-pattern>
+       </filter-mapping>
+        <!-- SpringMVC 前端控制器 DispatcherServlet 配置 -->
+      <servlet>
+               <servlet-name>springmvc</servlet-name>
+               <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+               <init-param>
+                   <param-name>contextConfigLocation</param-name>
+                   <param-value>classpath:spring-mvc.xml</param-value>
+               </init-param>
+               <load-on-startup>1</load-on-startup>
+               <async-supported>true</async-supported>
+       </servlet>
+       <servlet-mapping>
+               <servlet-name>springmvc</servlet-name>
+               <url-pattern>/</url-pattern>
+       </servlet-mapping>
+
+```
+>web.xml中还配置了spring和spring mvc对应的需要扫描加载的xml文件。这样一来启动一个spring web项目就会引入很多xml文件，这样会导致了项目很难去维护。
+使用spring boot的"约定优于配置"，这些重复的配置spring boot已经帮我们做了，如果你是一个没有特殊配置的spring 项目，那么使用spring boot可以大大节省
+搭建工程的时间，spring boot已经将常规的配置都给你配置好了，你只需要简单的引入依赖即可。
+
+ #快速启动一个spring web项目，只需要引入下面的依赖
+```
+     <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </dependency>
+     </dependencies>
+```
+> 引入spring-boot-starter-web（快速启动web）依赖之后，这个依赖里面会依赖对应的spring web，spring mvc，tomcat一整套启动一个web项目所需要的依赖。
+
+ #编写一个简单的HelloController类
+ ```
+/**
+* HelloWorld控制层
+* @author Winston.Wang
+* @date 2019/7/21
+* @version 1.0
+**/
+@RestController
+public class HelloController {
+
+    @RequestMapping("/helloWorld")
+    public  String  home(){
+
+        return "Hello World";
+    }
+
+}
+ ```
+ >使用我们Application.java启动类启动，可以看到控制台中tomcat监听的端口是8080，访问 http://localhost:8080/helloWorld 就能看到“Hello World”
+在spring boot中，引入spring-boot-starter-web，spring boot会帮我们new  Tomcat()对象，其中Tomcat默认监听的端口是8080。其中的Tomcat是使用New出来的
+
+---
+>从上面我们看到了Tomcat是New出来的，监听的端口是8080，这就是spring boot和我们约定的配置，port=8080，如果有需要我们可以修改。往下看
 
 #如何寻找spring-Boot对应启动模块的配置参数
->修改默认配置参数，spring-boot扫描配置文件是通过spring-boot包下的spring.factories定义的ConfigFileApplicationListener类来加载
-配置文件。默认会扫描classpath:/,classpath:/config/,file:./,file:./config/   下面的application*.properties，xml,.yal配置配置文件
+>修改默认配置参数，spring-boot扫描配置文件是通过spring-boot包下的spring.factories定义的ConfigFileApplicationListener类来加载配置文件。默认会扫描classpath:/,classpath:/config/,file:./,file:./config/   
+下面的application*.properties，application*.yml后缀的文件作为配置文件所以我们只需要在项目的resource目录下，新建一个application.properties文件来作为修改约定的配置文件。内容如下
+```
+###tomcat配置
+#端口
+server.port=8081
+#绑定IP
+server.address=localhost
+#超时时间
+connectionTimeout=5000
+```
+>重新启动工程就能看到端口修改成我们所需要的8081端口。
+项目代码已经同步到github，地址：https://github.com/ZhongXinWang/winston-java-tutorial
 
->spring-boot的一些默认配置都在spring-autoconfigure包下
-##spring-boot-starter-web 如何配置tomcat的端口和其他默认配置
->spring-autoconfigure包下有个ServerProperties类，里面有个Tomcat配置类
-上面有个注解@ConfigurationProperties(prefix = "server", ignoreUnknownFields = true)定义了配置的前缀
-在classpath下新建一个application.properties文件,输入：server.port=8081能修改tomcat启动的8080端口为8081
+# spring-boot约定大于配置，偏要修改配置
+>spring-boot约定大于配置,大部分情况下约定的配置足以满足你的需要，但是我们必须学会如何在约定的配置无法满足我们的时候，我们能修改约定的配置。
+spring-boot扫描配置文件是通过spring-boot包下的spring.factories定义的ConfigFileApplicationListener类来加载
+配置文件。默认会扫描classpath:/,classpath:/config/,file:./,file:./config/   下面的application*.properties，application*.yml后缀的文件作为配置文件
+ 所以我们只需要在项目的resource目录下，新建一个application.properties文件来作为修改约定的配置文件。
+ 
+## application.properties配置文件有了，如何修改
+
+>spring-boot的默认配置都在spring-boot-autoconfigure jar包下。这个包下的每个子包的配置都有一个*Properties类，下面以寻找tomcat配置为例
+
+##如何寻找tomcat配置的字段修改配置
+>org.springframework.boot.autoconfigure.web.ServerProperties类，是Tomcat配置类上面有个注解@ConfigurationProperties(prefix = "server", ignoreUnknownFields = true)定义了配置的前缀
+在application.properties文件,输入：server.port=8081就能修改tomcat启动的默认8080端口为8081。就这样轻松的修改默认的配置。其他快速启动模块的配置都类似。寻找*Properties类
+##Tomcat的一些配置项
 ```
 # EMBEDDED SERVER CONFIGURATION (ServerProperties)
-server.address= # Network address to which the server should bind to.
+server.address= localhost  # 服务绑定的IP.
 server.compression.enabled=false # If response compression is enabled.
 server.compression.excluded-user-agents= # List of user-agents to exclude from compression.
 server.compression.mime-types= # Comma-separated list of MIME types that should be compressed. For instance `text/html,text/css,application/json`
 server.compression.min-response-size= # Minimum response size that is required for compression to be performed. For instance 2048
-server.connection-timeout= # Time in milliseconds that connectors will wait for another HTTP request before closing the connection. When not set, the connector's container-specific default will be used. Use a value of -1 to indicate no (i.e. infinite) timeout.
-server.display-name=application # Display name of the application.
+server.connection-timeout= # 连接超时配置.
+server.display-name=application # 应用名
 server.max-http-header-size=0 # Maximum size in bytes of the HTTP message header.
 server.error.include-exception=false # Include the "exception" attribute.
 server.error.include-stacktrace=never # When to include a "stacktrace" attribute.
@@ -146,7 +237,7 @@ server.jetty.accesslog.retention-period=31 # Number of days before rotated log f
 server.jetty.accesslog.time-zone=GMT # Timezone of the request log.
 server.jetty.max-http-post-size=0 # Maximum size in bytes of the HTTP post or put content.
 server.jetty.selectors= # Number of selector threads to use.
-server.port=8080 # Server HTTP port.
+server.port=8080 # 监听端口，默认8080.
 server.server-header= # Value to use for the Server response header (no header is sent if empty)
 server.use-forward-headers= # If X-Forwarded-* headers should be applied to the HttpRequest.
 server.servlet.context-parameters.*= # Servlet context init parameters
@@ -227,10 +318,9 @@ server.undertow.io-threads= # Number of I/O threads to create for the worker.
 server.undertow.eager-filter-init=true # Whether servlet filters should be initialized on startup.
 server.undertow.max-http-post-size=0 # Maximum size in bytes of the HTTP post content.
 server.undertow.worker-threads= # Number of worker threads.
-
 ```
-
-#切换为使用jetty，修改pom依赖，要排除tomcat的依赖
+# spring-boot-starter-web（快速启动web）默认使用tomcat，修改为jetty
+##切换为使用jetty，修改pom依赖，要排除tomcat的依赖
 ```
 <dependencies>
     <!-- spring-boot使用jetty容器配置begin -->
@@ -258,3 +348,4 @@ server.undertow.worker-threads= # Number of worker threads.
     <!-- spring-boot使用jetty容器配置end -->
 </dependencies>
 ```
+>经过以上的操作就能将web容器修改为jetty了

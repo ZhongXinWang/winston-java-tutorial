@@ -2,6 +2,7 @@
 ### java template
 # Compiled class file
 *.class
+classes/
 
 # Log file
 *.log
@@ -30,3 +31,4 @@ gen
 .settings
 .project
 .classpath
+target/
